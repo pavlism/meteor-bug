@@ -1,0 +1,68 @@
+<template name="UGCheckBox">
+    <h2>Info</h2>
+    This is basically the polymer element &#x3C;paper-checkbox&#x3E; but with a read only mode using some polymer icons.
+    <hr>
+    <table>
+        {{> rowHeader title='Basic UG-Check-Box'}}
+        <tr>
+            <td class='example'>
+                <UG-Check-Box title='simple checkbox'></ug-check-box>
+            </td>
+            <td>
+                {{> UGCheckBox_code1}}
+            </td>
+        </tr>
+        {{> midRowHeader title='UG-Check-Box checked'}}
+        <tr>
+            <td class='example'>
+                <UG-Check-Box id='secondBox' title='simple checkbox' checked></ug-check-box>
+            </td>
+            <td>
+                {{> UGCheckBox_code2}}
+            </td>
+        </tr>
+        {{> midRowHeader title='UG-Check-Box readOnly checked and un-checked'}}
+        <tr>
+            <td class="span6">
+                <UG-Check-Box title='simple checkbox' readOnly='true'></ug-check-box><br>
+                <UG-Check-Box title='simple checkbox' readOnly='true' checked='true'></ug-check-box>
+            </td>
+            <td>
+                {{> UGCheckBox_code3}}
+            </td>
+        </tr>
+    </table>
+    <hr>
+    {{>UGCheckBox_events}}
+    <br>
+    <br>
+    <br>
+</template>
+
+<template name="UGCheckBox_code1">
+    <h4>Code</h4>
+    <pre>
+    &lt;UG-Check-Box title=&apos;simple checkbox&apos;&gt;&lt;/ug-check-box&gt;</pre>
+</template>
+
+<template name="UGCheckBox_code2">
+    <h4>Code</h4>
+    <pre>
+    &lt;UG-Check-Box title=&apos;simple checkbox&apos; checked=&apos;true&apos;&gt;&lt;/ug-check-box&gt;</pre>
+</template>
+
+<template name="UGCheckBox_code3">
+    <h4>Code</h4>
+    <pre>
+    &lt;UG-Check-Box title=&apos;simple checkbox&apos; readOnly=&apos;true&apos;&gt;&lt;/ug-check-box&gt;&lt;br&gt;
+    &lt;UG-Check-Box title=&apos;simple checkbox&apos; readOnly=&apos;true&apos; checked=&apos;true&apos;&gt;&lt;/ug-check-box&gt;</pre>
+</template>
+
+
+<template name="UGCheckBox_events">
+    <h2>Events</h2>
+    <H4>{ID}_UG-Check-Box_changed</H4>
+    When a check box is check the changed event will fire.  This event will use the ID on the UG-Check-Box element.<br>
+    The trigger argument will contain the UG-Check-Box Object, the event object and a boolean called isChecked.<br>
+    Open the console log and check the boxed to see an example of this event.
+</template>

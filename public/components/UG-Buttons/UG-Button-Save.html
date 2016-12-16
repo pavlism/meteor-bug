@@ -1,0 +1,18 @@
+<script src="../Libs/logger.js"></script>
+<script src="../Libs/JSLIB.js"></script>
+<script src="../Libs/EventBroker.js"></script>
+<script src="../Libs/stringEXT.js"></script>
+<script src="../Libs/PolymerObj.js"></script>
+<link rel="import" href="UG-Base-Button.html">
+
+<dom-module id="UG-Button-Save">
+    <template>
+        <UG-Base-Button id="[[id]]" class$="[[class]]" caption=" Save"><UG-Icon-Check></UG-Icon-Check></UG-Base-Button>
+    </template>
+
+    <script>
+        var pObj = new PolymerObj('UG-Button-Save');
+        Polymer(pObj);
+    </script>
+
+</dom-module>

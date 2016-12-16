@@ -1,0 +1,18 @@
+<link rel="import" href="status-change-button.html">
+
+<dom-module id="status-change-bar">
+
+    <template>
+        <template is="dom-repeat" items="[[buttons]]">
+            <status-change-button object=[[object]] new-status=[[item.newStatus]] text="[[item.text]]"></status-change-button>
+        </template>
+    </template>
+
+    <script>
+        var pObj = {};
+        pObj.is = 'status-change-bar';
+        pObj.properties = {buttons: Array, object: Object};
+        Polymer(pObj);
+    </script>
+
+</dom-module>

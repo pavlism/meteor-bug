@@ -1,0 +1,62 @@
+<dom-module id="single-contact">
+
+    <template>
+        <template is="dom-if" if="{{checkForEmail(contact)}}">
+            <a href="mailto:[[email]]">[[name]]</a>
+        </template>
+        <template is="dom-if" if="{{!checkForEmail(contact)}}">
+            [[contact]]
+        </template>
+    </template>
+
+    <script>
+        var checkForEmail = function (contact) {
+            if (this.requiresFormatting(contact)) {
+                this.name = this.getName(contact);
+                this.email = this.getEmail(contact);
+                return true;
+            }
+            return false;
+        };
+        var getName = function (contact) {
+            //pulls the name from the contact info
+            contact = contact.replace('&lt;', '<');
+            contact = contact.replace('&gt;', '>');
+            var name = '';
+            var dashPos = contact.indexOf('<');
+            name = contact.left(dashPos).trim();
+            return name;
+        };
+        var getEmail = function (contact) {
+            //pulls the email from the contact info
+            contact = contact.replace('&lt;', '<');
+            contact = contact.replace('&gt;', '>');
+            var email = '';
+            var dashPos = contact.indexOf('<');
+            email = contact.right(dashPos);
+            email = email.replace('>', '').trim();
+            return email;
+        };
+        var requiresFormatting = function (contact) {
+            //looks for the < or &lt to see if the contact has a email
+            //expected format to cerate the link: mark pavlis <mpavlis@gmail.com>
+            contact = contact.replace('&lt;', '<');
+            contact = contact.replace('&gt;', '>');
+            var dashPos = contact.indexOf('<');
+            if (dashPos < 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        var pObj = {};
+        pObj.is = 'single-contact';
+        pObj.checkForEmail = checkForEmail;
+        pObj.getName = getName;
+        pObj.getEmail = getEmail;
+        pObj.requiresFormatting = requiresFormatting;
+        Polymer(pObj);
+    </script>
+
+</dom-module>

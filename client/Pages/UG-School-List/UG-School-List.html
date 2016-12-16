@@ -1,0 +1,95 @@
+<head>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="bower_components\polymer/polymer.html">
+    <link rel="import" href="components\UG-School-List\UG-School-List.html">
+</head>
+
+<template name="UGSchoolList">
+    <h2>Info</h2>
+    The School List drop down uses the polymer drop down menu &#x3C;paper-input&#x3E; and currently fills the list <br>
+    with hard coded data, but in the future could make a call to the API to get the school information.
+    <hr>
+    <table>
+        {{> rowHeader title='Basic UG-School-List'}}
+        <tr>
+            <td class='example'>
+                <UG-School-List></UG-School-List><br>
+                {{#if schoolLoaded1}}
+                {{> school_Data schoolDetails=schoolDetails1}}
+                {{/if}}
+            </td>
+            <td>
+                {{> UGSchoolList_code}}
+            </td>
+        </tr>
+        {{> midRowHeader title='UG-School-List with attributes'}}
+        <tr>
+            <td class='example'>
+                <UG-School-List id='UGschoolList1' class='sampleClass' value='Alma PS'></UG-School-List><br>
+                {{#if schoolLoaded2}}
+                {{> school_Data schoolDetails=schoolDetails2}}
+                {{/if}}
+            </td>
+            <td>
+                {{> UGSchoolList_code2}}
+            </td>
+        </tr>
+        {{> midRowHeader title='UG-School-List readOnly'}}
+        <tr>
+            <td class="span6">
+                <UG-School-List value='Alma PS' readOnly="true"></UG-School-List>
+            </td>
+            <td>
+                {{> UGSchoolList_code3}}
+            </td>
+        </tr>
+    </table>
+    <hr>
+    {{>UGSchoolList_events}}
+    <br>
+    <br>
+    <br>
+</template>
+
+<template name="school_Data">
+    <h3>School Data</h3>
+    <b>Name:</b> {{schoolDetails.Name}}<br>
+    <b>LocationID:</b> {{schoolDetails.LocationID}}<br>
+    <b>MinistryID:</b> {{schoolDetails.MinistryID}}<br>
+    <b>ShortName:</b> {{schoolDetails.ShortName}}<br>
+    <b>City:</b> {{schoolDetails.City}}<br>
+    <b>Province:</b> {{schoolDetails.Province}}<br>
+    <b>PostalCode:</b> {{schoolDetails.PostalCode}}<br>
+    <b>Phone:</b> {{schoolDetails.Phone}}<br>
+</template>
+
+<template name="UGSchoolList_code">
+    <h4>Code</h4>
+    <pre>
+    &lt;h2&gt;UG-School-List&lt;/h2&gt;
+    school list:&lt;UG-School-List&gt;&lt;/UG-School-List&gt;</pre>
+    Note: this doesn't include the disaplying of the school data
+</template>
+
+<template name="UGSchoolList_code2">
+    <h4>Code</h4>
+    <pre>
+    &lt;h2&gt;UG-School-List&lt;/h2&gt;
+    school list:&lt;UG-School-List id='UGschoolList1' class='sampleClass' value='Alma PS'&gt;&lt;/UG-School-List&gt;</pre>
+    <br>
+    Note: this doesn't include the disaplying of the school data
+</template>
+
+<template name="UGSchoolList_code3">
+    <h4>Code</h4>
+    <pre>
+    &lt;h2&gt;UG-School-List&lt;/h2&gt;
+    school list:&lt;UG-School-List value='Alma PS' readOnly='true'&gt;&lt;/UG-School-List&gt;</pre>
+</template>
+
+<template name="UGSchoolList_events">
+    <h2>Events</h2>
+    <H4>{ID}_schoolSelected</H4>
+    When a school is selected an event will fire.  This event will use the ID on the UG-School-List element.<br>
+    Open the console log and check the boxed to see an example of this event.
+</template>

@@ -1,0 +1,67 @@
+<script src="../Libs/logger.js"></script>
+<script src="../Libs/JSLIB.js"></script>
+<script src="../Libs/EventBroker.js"></script>
+<script src="../Libs/stringEXT.js"></script>
+<script src="../Libs/PolymerObj.js"></script>
+
+<dom-module id="UG-School-List">
+    <template>
+        <template is="dom-if" if="{{isNotReadOnly(readonly)}}">
+            <paper-input label="School List" list="schoolList" style="width: 200px;" name="{{name}}" value="{{value}}"></paper-input>
+            <datalist id="schoolList">
+                <template is="dom-repeat" items="[[schools]]">
+                    <option data-id="[[index]]" value="[[item.Name]]"></option>
+                </template>
+            </datalist>
+        </template>
+        <template is="dom-if" if="{{isReadOnly(readonly)}}">
+            {{value}}
+        </template>
+    </template>
+
+    <script>
+        var schoolSelected = function (event) {
+            var selectedName = $(event.currentTarget).children().first().val();
+            var schoolObject = $.grep(this.schools, function (n, i) {
+                return (n.Name === selectedName);
+            });
+
+            if (schoolObject.length > 0) {
+                EventBroker.trigger(this.id + "_schoolSelected", schoolObject[0]);
+            }
+        };
+
+        var arrowClick = function (event, a, b) {
+
+            var selectedName = $(event.currentTarget).children().first().val();
+            var schoolObject = $.grep(this.schools, function (n, i) {
+                return (n.Name === selectedName);
+            });
+
+            var width = $(event.target).width();
+            var x = event.offsetX;
+
+            if (schoolObject.length > 0 && x >= width - 20) {
+                $(event.currentTarget).children().first().val('');
+            }
+        };
+
+
+        var schoolArray = [];
+        schoolArray.push({LocationID: 101, MinistryID: 461059, Name: 'Aberfoyle PS', ShortName: 'ABEPS', Address: '16 Old Brock Rd RR3', City: 'Guelph', Province: 'ON', PostalCode: 'N1H6H9', Phone: '5197637040'});
+        schoolArray.push({LocationID: 104, MinistryID: 438170, Name: 'Alma PS', ShortName: 'ALMPS', Address: '12 Simpson St E Box 118', City: 'Alma', Province: 'ON', PostalCode: 'N0B1A0', Phone: '8465110'});
+        schoolArray.push({LocationID: 106, MinistryID: 024252, Name: 'Arthur PS', ShortName: 'ARTPS', Address: '155 Conestoga St N PO Box 148', City: 'Arthur', Province: 'ON', PostalCode: 'N0G1A0', Phone: '5198483793'});
+        schoolArray.push({LocationID: 107, MinistryID: 282324, Name: 'JD Hogarth PS', ShortName: 'JDHPS', Address: '360 Belsyde St E', City: 'Fergus', Province: 'ON', PostalCode: 'N1M1Z5', Phone: '5197870151'});
+
+        var pObj = new PolymerObj('UG-School-List');
+        pObj.properties.schools = {type: Array, value: schoolArray};
+        pObj.properties.readonly = {type: Boolean, value: false};
+        pObj.schoolSelected = schoolSelected;
+        pObj.arrowClick = arrowClick;
+        pObj.listeners.input = 'schoolSelected';
+        pObj.listeners.click = 'arrowClick';
+        Polymer(pObj);
+
+    </script>
+
+</dom-module>

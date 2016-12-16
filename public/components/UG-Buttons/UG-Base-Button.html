@@ -1,0 +1,25 @@
+<script src="../Libs/logger.js"></script>
+<script src="../Libs/JSLIB.js"></script>
+<script src="../Libs/EventBroker.js"></script>
+<script src="../Libs/stringEXT.js"></script>
+<script src="../Libs/PolymerObj.js"></script>
+
+<dom-module id="UG-Base-Button">
+    <template>
+        <paper-button id="[[id]]" class$="[[class]]" raised><content></content>[[caption]]</paper-button>
+    </template>
+
+    <script>
+        var pObj = new PolymerObj('UG-Base-Button');
+        pObj.clicked = function (event) {
+            var id = this.id;
+            if(Lib.JS.isUndefined(id)){
+                id = "";
+            }
+            EventBroker.trigger(id + "_UG-Button_clicked", {button: this, event: event});
+        };
+        pObj.listeners.click = 'clicked';
+        Polymer(pObj);
+    </script>
+
+</dom-module>

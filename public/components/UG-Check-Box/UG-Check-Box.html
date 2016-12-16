@@ -1,0 +1,49 @@
+<script src="../Libs/logger.js"></script>
+<script src="../Libs/JSLIB.js"></script>
+<script src="../Libs/EventBroker.js"></script>
+<script src="../Libs/stringEXT.js"></script>
+<script src="../Libs/PolymerObj.js"></script>
+
+<style>
+    .green {color: green;}
+    .red {color: red;}
+</style>
+
+<dom-module id="UG-Check-Box">
+    <template>
+        <template is="dom-if" if="{{isNotReadOnly(readonly)}}">
+            <template is="dom-if" if="{{isNotReadOnly(checked)}}">
+                <paper-checkbox name='{{name}}'>{{title}}</paper-checkbox>
+            </template>
+            <template is="dom-if" if="{{isReadOnly(checked)}}">
+                <paper-checkbox name='{{name}}' checked>{{title}}</paper-checkbox>
+            </template>
+        </template>
+        <template is="dom-if" if="{{isReadOnly(readonly)}}">
+            <template is="dom-if" if="{{isNotReadOnly(checked)}}">
+                <iron-icon icon="icons:close" class='red'></iron-icon> {{title}}
+            </template>
+            <template is="dom-if" if="{{isReadOnly(checked)}}">
+                <iron-icon icon="icons:check" class='green'></iron-icon> {{title}}
+            </template>
+        </template>
+    </template>
+
+    <script>
+        var pObj = new PolymerObj('UG-Check-Box');
+        pObj.properties.readonly = {type: Boolean, value: false};
+        pObj.properties.checked = {type: Boolean, value: false};
+
+        pObj.boxChecked = function (event) {
+            var isChecked = event.target.checked;
+            var id = this.id;
+            if (Lib.JS.isUndefined(id)) {
+                id = "";
+            }
+            EventBroker.trigger(id + "_UG-Check-Box_changed", {isChecked: isChecked, checkbox: this, event: event});
+        };
+        pObj.listeners.change = 'boxChecked';
+        Polymer(pObj);
+    </script>
+
+</dom-module>

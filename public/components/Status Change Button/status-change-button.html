@@ -1,0 +1,47 @@
+<script src="../Libs/logger.js"></script>
+<script src="../Libs/EventBroker.js"></script>
+<script src="../Libs/PolymerObj.js"></script>
+
+
+<dom-module id="status-change-button">
+    <template>
+        <button id="[[id]]" class="[[class]]">[[text]]</button>
+    </template>
+
+    <script>
+        var statusChange = function (event, x) {
+            EventBroker.trigger("statusChange_" + this.object.type + "_" + this.object.ID, this.newStatus);
+        };
+        var attached = function () {
+            var log = new Logger('status-change-button', CLL.error);
+            if (!Lib.JS.isUndefinedAndEmpty(this.text)) {
+                log.error("Missing text");
+            }
+            if (!Lib.JS.isUndefinedAndEmpty(this.newStatus)) {
+                log.error("Missing stauts");
+            }
+            if (!Lib.JS.isUndefinedAndEmpty(this.object)) {
+                log.error("Missing object");
+            }
+        };
+
+        var pObj = {};
+        pObj.is = 'status-change-button';
+        pObj.properties = {object: Object, newStatus: String, text: String};
+        pObj.listeners = {click: 'statusChange2'};
+        pObj.statusChange = statusChange;
+        pObj.attached = attached;
+        
+        var pObj2 = new PolymerObj('status-change-button');
+        pObj2.addProperty('object', Object);
+        pObj2.addProperty('newStatus', String);
+        pObj2.addProperty('text', String);
+        pObj2.addFunction('statusChange', statusChange);
+        pObj2.addFunction('attached', attached);
+        pObj2.addListener('click', 'statusChange');
+        
+
+        
+        Polymer(pObj);
+    </script>
+</dom-module>

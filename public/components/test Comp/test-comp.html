@@ -1,0 +1,25 @@
+<dom-module id="test-comp">
+  <template>
+      text:[[text]]<br/>
+  </template>
+    
+    <script>
+        Polymer({
+
+            is: 'test-comp',
+
+            properties: {
+                text: String,
+            },
+            attached: function () {               
+                console.log(this.text);
+            },
+            listeners: {
+                'click': 'buttonClick'
+            },
+            buttonClick: function (event, x) {
+                alert('click');
+            }
+        });
+    </script>
+</dom-module>

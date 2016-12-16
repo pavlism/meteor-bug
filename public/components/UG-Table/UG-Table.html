@@ -1,0 +1,311 @@
+<script src="../Libs/logger.js"></script>
+<script src="../Libs/JSLIB.js"></script>
+<script src="../Libs/EventBroker.js"></script>
+<script src="../Libs/stringEXT.js"></script>
+<script src="../Libs/PolymerObj.js"></script>
+
+<link href="UG-Button-Clear-Filters.html">
+
+<style>
+    .caret {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        vertical-align: top;
+        border-top: 8px solid rgb(245, 203, 203);
+        border-right: 8px solid transparent;
+        border-left: 8px solid transparent;
+        content: "";
+    }
+    tr.even{
+        background-color:rgba(255, 255, 255, 1);
+    }
+    tr.odd{
+        background-color:rgba(178, 238, 251, 0.31);
+    }
+    .multiselect{
+        padding-bottom:0;
+    }
+</style>
+
+<dom-module id="UG-Table">
+    <template>
+        [[setup(filter, data)]]
+
+        <template is="dom-if" if="[[filter]]">
+            <UG-Button-Clear></UG-Button-Clear>
+        </template>
+
+        <table border="1" class="table">
+            <thead>
+                <tr style="background-color:#216AA9; color:#FFFFFF">
+            <template is="dom-repeat" items="[[getHeader(data)]]">
+                <th>[[item]]
+                <template is="dom-if" if="[[filter]]">
+                    <select id="[[item]]_filter" multiple="multiple">
+                        <template is="dom-repeat" items="[[getOptions(filter,data, item)]]">
+                            <option value="[[item]]">[[item]]</option>
+                        </template>
+                    </select>
+                </template>
+
+                </th>
+            </template>
+            </tr>
+            </thead>
+            <tbody>
+            <template is="dom-repeat" items="[[getBody(data)]]">
+                <template is="dom-if" if="[[isEven(index)]]">
+                    <tr class="even">
+                    <template is="dom-repeat" items="[[item]]">
+                        <td>[[item]]</td>
+                    </template>
+                    </tr>
+                </template>
+                <template is="dom-if" if="[[isNotEven(index)]]">
+                    <tr class="odd">
+                    <template is="dom-repeat" items="[[item]]">
+                        <td>[[item]]</td>
+                    </template>
+                    </tr>
+                </template>
+            </template>
+            </tbody>
+
+        </table>
+    </template>
+
+    <script>
+        //var headers = [];
+        var options = {};
+        //var filters = {};
+        var rows = [];
+        var tableID = "";
+
+        var getUniqueResults = function (header, array) {
+            //loop through columns are get rid of duplicates
+
+            var columnNumber = array[0].indexOf(header)
+            var columnData = []
+
+            for (var rowCounter = 1; rowCounter < array.length; rowCounter++) {
+                columnData.push(array[rowCounter][columnNumber]);
+            }
+
+            rows[header] = columnData;
+            columnData = $.unique(columnData);
+            options[header] = columnData;
+
+            return columnData;
+        };
+        var updateFilter = function (column, value, rows, filters) {
+            if (Lib.JS.isUndefined(filters[column])) {
+                filters[column] = [];
+            }
+
+            var index = filters[column].indexOf(value);
+            if (index === -1) {
+                filters[column].push(value);
+            } else {
+                filters[column].splice(index, 1);
+            }
+
+            //update the table
+            log.trace(JSON.stringify(filters));
+            updateTable(rows, filters);
+        };
+        var checkFilterColumn = function (filterValues, SQLColName, row, headers) {
+            if (filterValues.length === 0) {
+                return true;
+            }
+            var columnNum = headers.indexOf(SQLColName);
+            if (filterValues.indexOf(row[columnNum].toString()) === -1) {
+                return false;
+            } else {
+                return true;
+            }
+        };
+        var setupArrows = function (header, filters) {
+            $("[id='" + header + "_filter'").multiselect({
+                buttonClass: 'btn btn-link',
+                includeSelectAllOption: true,
+                enableCaseInsensitiveFiltering: true,
+                buttonText: function (option, select) {
+                    if (options.length === 0) {
+                        return title;
+                    }
+                },
+                onChange: function (event, isSelectAll) {
+                    if (Lib.JS.isUndefined(event)) {
+                        removeFilter(header, rows, filters);
+                    } else {
+                        updateFilter(header, $(event).val(), rows, filters);
+                    }
+                }
+            });
+        };
+        var removeFilter = function (header, rows, filters) {
+            filters[header] = [];
+            updateTable(rows, filters);
+        };
+        var updateTable = function (rows, filters) {
+            var rowCounter = 0;
+            var isEven = true;
+            var rowNum = 0;
+            var domRows = $("[id='" + tableID + "'").children().find('tr');
+
+            //loop through each row and see if they pass the filter conditions
+            for (var rowCounter = 1; rowCounter < rows.length; rowCounter++) {
+                var isPass = true;
+
+                //Check if the row passes the non-date filter conditions
+                for (var filter in filters) {
+                    if (filter !== 'type') {
+                        isPass = isPass && checkFilterColumn(filters[filter], filter, rows[rowCounter], rows[0]);
+                    }
+                }
+
+                //setup the row coloring
+                if (isPass) {
+                    $(domRows[rowCounter]).show();
+                    if (isEven) {
+                        $(domRows[rowCounter]).removeClass('odd');
+                        $(domRows[rowCounter]).addClass('even');
+                        isEven = false;
+                    } else {
+                        isEven = true;
+                        $(domRows[rowCounter]).removeClass('even');
+                        $(domRows[rowCounter]).addClass('odd');
+                    }
+                } else {
+                    $(domRows[rowCounter]).hide();
+                }
+            }
+        };
+
+        var pObj = new PolymerObj('UG-Table');
+        pObj.properties.data = {type: Array};
+        pObj.properties.filter = {type: Boolean, value: false};
+        pObj.properties.filters = {type: Object};
+        pObj.properties.headers = {type: Object};
+        pObj.properties.rows = {type: Object};
+
+        pObj.getOptions = function (filter, data, item) {
+            rows = data;
+            tableID = this.id;
+            if (filter && data.length > 0) {
+
+                //headers.push(item);
+                //debugger;
+                pObj.properties.headers[item] = item;
+                return getUniqueResults(item, data);
+            } else {
+                return [];
+            }
+        };
+
+        pObj.isEven = function (index) {
+            if (index % 2 === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        pObj.isNotEven = function (index) {
+            return !this.isEven(index);
+        };
+        pObj.isHeader = function (index) {
+            if (index === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        pObj.isNotHeader = function (index) {
+            return !this.isHeader(index);
+        };
+        pObj.ready = function () {
+            var filters = pObj.properties.filters;
+            var headerObj = pObj.properties.headers;
+
+            var check = function () {
+                if (Object.keys(headerObj).length > 1) {
+                    for (var header in headerObj) {
+                        if (header !== 'type') {
+                            if($("[id='" + header + "_filter'").length <1){
+                                setTimeout(check, 100); // check again in a second
+                            }else{
+                                setupArrows(header, filters);
+                            }
+                        }
+                    }
+                }
+                else {
+                    setTimeout(check, 100); // check again in a second
+                }
+            };
+
+            check();
+        };
+        pObj.setup = function (filter, data) {
+            if (filter && data.length > 0) {
+                var rows = data.slice(0);
+                EventBroker.listen('clearFilters', pObj, function (listenerArgs, triggerArgs) {
+                    var filters = listenerArgs.properties.filters;
+                    for (var filter in filters) {
+                        if (filter !== 'type') {
+                            filters[filter] = [];
+                        }
+                    }
+                    updateTable(rows, filters);
+                });
+            }
+        };
+
+        pObj.click = function (event) {
+            var cell = $(event.target).text();
+            var domRow = $(event.target).parent().find('td');
+            var headers = [];
+            //get the headers
+            $(event.target).parent().parent().parent().find('th').each(function () {
+                headers.push($(this).text().trim());
+            })
+
+            var row = {};
+            for (var rowCounter = 0; rowCounter < domRow.length; rowCounter++) {
+                row[headers[rowCounter]] = $(domRow[rowCounter]).text().trim();
+            }
+            EventBroker.trigger(this.id + "_UG-Table_clicked", {cell: cell, row: row, table: this, event: event});
+        };
+        pObj.listeners.click = 'click';
+
+        pObj.dblclick = function (event) {
+            var cell = $(event.target).text();
+            var domRow = $(event.target).parent().find('td');
+            var headers = [];
+            //get the headers
+            $(event.target).parent().parent().parent().find('th').each(function () {
+                headers.push($(this).text().trim());
+            })
+
+            var row = {};
+            for (var rowCounter = 0; rowCounter < domRow.length; rowCounter++) {
+                row[headers[rowCounter]] = $(domRow[rowCounter]).text().trim();
+            }
+            EventBroker.trigger(this.id + "_UG-Table_dblclicked", {cell: cell, row: row, table: this, event: event});
+        };
+        pObj.listeners.dblclick = 'dblclick';
+
+
+        pObj.getHeader = function (data) {
+            var headers = data[0];
+            return headers;
+        };
+        pObj.getBody = function (data) {
+            var body = data.slice(0);
+            return body.splice(1);
+        };
+        Polymer(pObj);
+    </script>
+
+</dom-module>

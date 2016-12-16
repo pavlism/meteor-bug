@@ -1,0 +1,76 @@
+<template name="Buttons">
+    {{>test}}
+    <h2>Info</h2>
+    The buttons would be a series of button elements.  Each element uses a polymer &#x3C;paper-button&#x3E; but then<br>
+    adds it's own icon and text.  They could also be configured to use custom events.
+    <hr>
+    1234567
+    <table>
+        {{> rowHeader title='Basic Set Of buttons'}}
+        <tr>
+            <td class='example'>
+                <UG-Button-Save></UG-Button-Save>
+                <UG-Button-Cancel></UG-Button-Cancel>
+            </td>
+        <td>
+            {{> Buttons_code1}}
+        </td>
+        </tr>
+        {{> midRowHeader title='Buttons with IDs'}}
+        <tr>
+            <td class='example'>
+                <UG-Button-Save id='saveButton'></UG-Button-Save>
+                <UG-Button-Cancel id='cancelButton'></UG-Button-Cancel>
+        </td>
+        <td>
+            {{> Buttons_code2}}
+        </td>
+        </tr>
+        {{> midRowHeader title='Buttons with classes'}}
+        <tr>
+            <td class='example'>
+                <UG-Button-Save class='longButton'></UG-Button-Save>
+                <UG-Button-Cancel class='longButton'></UG-Button-Cancel>
+        </td>
+        <td>
+            {{> Buttons_code3}}
+        </td>
+        </tr>
+    </table>
+    <hr>
+    {{>UGButtons_events}}
+    <br>
+    <br>
+    <br>
+
+</template>
+
+<template name="Buttons_code1">
+    <h4>Code</h4>
+    <pre>
+    &#x3C;UG-Button-Save&#x3E;&#x3C;/UG-Button-Save&#x3E;
+    &#x3C;UG-Button-Cancel&#x3E;&#x3C;/UG-Button-Cancel&#x3E;</pre>
+    Note: CSS and styling not required, because it's built into the web component
+</template>
+
+<template name="Buttons_code2">
+    <h4>Code</h4>
+    <pre>
+    &#x3C;UG-Button-Save id=&#x27;saveButton&#x27;&#x3E;&#x3C;/UG-Button-Save&#x3E;
+    &#x3C;UG-Button-Cancel id=&#x27;cancelButton&#x27;&#x3E;&#x3C;/UG-Button-Cancel&#x3E;</pre>
+</template>
+
+<template name="Buttons_code3">
+    <h4>Code</h4>
+    <pre>
+    &#x3C;UG-Button-Save class=&#x27;longButton&#x27;&#x3E;&#x3C;/UG-Button-Save&#x3E;
+    &#x3C;UG-Button-Cancel class=&#x27;longButton&#x27;&#x3E;&#x3C;/UG-Button-Cancel&#x3E;</pre>
+</template>
+
+<template name="UGButtons_events">
+    <h2>Events</h2>
+    <H4>{ID}_UG-Button_clicked</H4>
+    When a button is clicked the changed event will fire.  This event will use the ID on the UG-Button element.<br>
+    The trigger argument will contain the UG-Button Object, the event object.<br>
+    Open the console log and check the boxed to see an example of this event.
+</template>

@@ -1,0 +1,55 @@
+<template name="Table">
+    <h2>Info</h2>
+    The table element requires an ID, and a 2D array of data passed in.  The first row of the array will become the headers.  Each other row will become the data.<br>
+    No css styling is required because it's all done inside of the element itself.
+
+    <table>
+        {{> rowHeader title='Basic UG-Table'}}
+        <tr>
+            <td class='example'>
+        <UG-Table data='{{tableData}}' id='Table1'></UG-Table>
+        </td>
+        <td>
+            {{> Table_code1}}
+        </td>
+        </tr>
+        {{> midRowHeader title='UG-Table With Filters'}}
+        <tr>
+            <td class='example'>
+                <UG-Table data='{{tableData}}' id='Table2' filter></UG-Table>
+            </td>
+        <td>
+            {{> Table_code2}}
+        </td>
+        </tr>
+        {{> rowHR}}
+    </table>
+    {{>UGTable_events}}
+    <br>
+    <br>
+    <br>
+</template>
+
+<template name="Table_code1">
+    <h4>Code</h4>
+    <pre>
+    &#x3C;UG-Table data=&#x27;{2DArray}&#x27; id=&#x27;Table1&#x27;&#x3E;&#x3C;/UG-Table&#x3E;</pre>
+</template>
+
+<template name="Table_code2">
+    <h4>Code</h4>
+    <pre>
+    &#x3C;UG-Table data=&#x27;{2DArray}&#x27; id=&#x27;Table2&#x27; filter&#x3E;&#x3C;/UG-Table&#x3E;</pre>
+</template>
+
+<template name="UGTable_events">
+    <h2>Events</h2>
+    <H4>{ID}_UG-Table_clicked</H4>
+    When cell is clicked is clicked the changed event will fire.  This event will use the ID on the UG-Table element.<br>
+    The trigger argument will contain the text from the cell, a row object, UG-Table Object and the event object.<br>
+    Open the console log and check the boxed to see an example of this event.
+    <H4>{ID}_UG-Table_dblclicked</H4>
+    When a cell is double clicked the changed event will fire.  This event will use the ID on the UG-Table element.<br>
+    The trigger argument will contain the text from the cell, a row object, UG-Table Object and the event object.<br>
+    Open the console log and check the boxed to see an example of this event.
+</template>

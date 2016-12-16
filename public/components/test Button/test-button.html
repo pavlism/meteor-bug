@@ -1,0 +1,22 @@
+<dom-module id="test-button">
+    <script>
+        Polymer({
+
+            is: 'test-button',
+
+            extends: 'button',
+            properties: {
+                text: String,
+            },
+            attached: function () {               
+                console.log(this.text);
+            },
+            listeners: {
+                'click': 'buttonClick'
+            },
+            buttonClick: function (event, x) {
+                alert('click');
+            }
+        });
+    </script>
+</dom-module>
